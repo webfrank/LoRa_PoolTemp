@@ -64,13 +64,6 @@ void onWakeUp() {
   Serial.println("TIMER");
   Serial.println(millis());
   state = ReadVoltage;
-  
-  pinMode(Vext,OUTPUT);
-  digitalWrite(Vext,LOW);
-  delay(50);
-  
-  // Start up the library
-  sensors.begin();
 }
 
 //CRC-8 - algoritmo basato sulle formule di CRC-8 di Dallas/Maxim
@@ -99,10 +92,16 @@ float readVoltage() {
 }
 
 float readTemperature() {
+  pinMode(Vext,OUTPUT);
+  digitalWrite(Vext,LOW);
+  delay(500);
+
+  sensors.begin();
   // call sensors.requestTemperatures() to issue a global temperature
   // request to all devices on the bus
   Serial.print("Requesting temperatures...");
   sensors.requestTemperatures(); // Send the command to get temperatures
+  delay(750);
   Serial.println("DONE");
   // After we got the temperatures, we can print them here.
   // We use the function ByIndex, and as an example get the temperature from the first sensor only.
@@ -115,7 +114,9 @@ float readTemperature() {
 void setup() {
   Serial.begin(115200);
 
-  boardInitMcu( );
+  pinMode(Vext, OUTPUT);
+  boardInitMcu();
+  
     
   Radio.Init( &RadioEvents );
   Radio.SetChannel( RF_FREQUENCY );
